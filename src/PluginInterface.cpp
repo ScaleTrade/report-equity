@@ -22,16 +22,34 @@ extern "C" void CreateReport(rapidjson::Value& request,
                              rapidjson::Value& response,
                              rapidjson::Document::AllocatorType& allocator,
                              CServerInterface* server) {
+    // Структура накопления итогов
+    struct Total {
+    };
+
+    std::unordered_map<std::string, Total> totals_map;
+
     std::string group_mask;
+    int from;
+    int to;
     if (request.HasMember("group") && request["group"].IsString()) {
         group_mask = request["group"].GetString();
     }
+    if (request.HasMember("from") && request["from"].IsNumber()) {
+        from = request["from"].GetInt();
+    }
+    if (request.HasMember("to") && request["to"].IsNumber()) {
+        to = request["to"].GetInt();
+    }
+
+    std::vector<EquityRecord> equity_vector;
 
     try {
-
+        server->GetAccountsEquitiesByGroup(from, to, group_mask, &equity_vector);
     } catch (const std::exception& e) {
         std::cerr << "[EquityReportInterface]: " << e.what() << std::endl;
     }
+
+    std::cout << "SIZE: " << equity_vector.size() << std::endl;
 
     const Node report = div({
         h1({text("Equity Report") }),

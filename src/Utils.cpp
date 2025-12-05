@@ -161,4 +161,15 @@ namespace utils {
 
         return result;
     }
+
+    // Костыль для показа
+    std::vector<EquityRecord> GetFirst100Records(const std::vector<EquityRecord>& records) {
+        const size_t limit = 100;
+
+        if (records.size() <= limit) {
+            return records;
+        }
+
+        return std::vector<EquityRecord>(records.begin(), records.begin() + limit);
+    }
 }

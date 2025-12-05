@@ -47,7 +47,8 @@ extern "C" void CreateReport(rapidjson::Value& request,
 
     std::cout << "1 SIZE: " << equity_vector.size() << std::endl;
 
-    std::vector<EquityRecord> agg_equity_vector = utils::AverageByLogin(equity_vector);
+    // Костыль для показа
+    std::vector<EquityRecord> agg_equity_vector = utils::GetFirst100Records(equity_vector);
 
     std::cout << "2 SIZE: " << agg_equity_vector.size() << std::endl;
 

@@ -39,7 +39,6 @@ extern "C" void CreateReport(rapidjson::Value& request,
 
     std::vector<EquityRecord> equity_vector;
 
-
     try {
         server->GetAccountsEquitiesByGroup(from, to, group_mask, &equity_vector);
     } catch (const std::exception& e) {
@@ -49,6 +48,8 @@ extern "C" void CreateReport(rapidjson::Value& request,
     std::cout << "SIZE: " << equity_vector.size() << std::endl;
 
     std::vector<EquityRecord> agg_equity_vector = utils::AverageByLogin(equity_vector);
+
+    std::cout << "SIZE: " << agg_equity_vector.size() << std::endl;
 
     //  v.1
     auto create_table = [&](const std::vector<EquityRecord>& equities) -> Node {
@@ -154,7 +155,9 @@ extern "C" void CreateReport(rapidjson::Value& request,
         create_table(agg_equity_vector)
     });
 
+    std::cout << "NODE CREATED" << std::endl;
+
     utils::CreateUI(report, response, allocator);
 
-    std::cout << "SUCCESS: " << std::endl;
+    std::cout << "SUCCESS" << std::endl;
 }

@@ -47,9 +47,54 @@ extern "C" void CreateReport(rapidjson::Value& request,
 
     std::cout << "SIZE: " << equity_vector.size() << std::endl;
 
+    TableBuilder table_builder("EquityReportTable");
+
+    table_builder.SetIdColumn("login");
+    table_builder.SetOrderBy("login", "DESC");
+    table_builder.EnableRefreshButton(false);
+    table_builder.EnableBookmarksButton(false);
+    table_builder.EnableExportButton(true);
+
+    table_builder.AddColumn({"login", "LOGIN"});
+    table_builder.AddColumn({"create_time", "CREATE_TIME"});
+    table_builder.AddColumn({"group", "GROUP"});
+    table_builder.AddColumn({"leverage", "LEVERAGE"});
+    table_builder.AddColumn({"balance", "BALANCE"});
+    table_builder.AddColumn({"prevbalance", "PREV_BALANCE"});
+    table_builder.AddColumn({"credit", "CREDIT"});
+    table_builder.AddColumn({"equity", "EQUITY"});
+    table_builder.AddColumn({"profit", "PROFIT"});
+    table_builder.AddColumn({"storage", "SWAP"});
+    table_builder.AddColumn({"commission", "COMMISSION"});
+    table_builder.AddColumn({"margin", "MARGIN"});
+    table_builder.AddColumn({"margin_free", "MARGIN_FREE"});
+    table_builder.AddColumn({"margin_level", "MARGIN_LEVEL"});
+    table_builder.AddColumn({"currency", "CURRENCY"});
+
+    for (const auto& equity_record : equity_vector) {
+        table_builder.AddRow({
+            {"login", std::to_string(equity_record.login)},
+            {"create_time", utils::FormatTimestampToString(equity_record.create_time)},
+            {"group", equity_record.group},
+            {"leverage", std::to_string(equity_record.leverage)},
+            {"balance", std::to_string(equity_record.balance)},
+            {"prevbalance", std::to_string(equity_record.prevbalance)},
+            {"credit", std::to_string(equity_record.credit)},
+            {"equity", std::to_string(equity_record.equity)},
+            {"storage", std::to_string(equity_record.storage)},
+            {"commission", std::to_string(equity_record.commission)},
+            {"margin", std::to_string(equity_record.margin)},
+            {"margin_free", std::to_string(equity_record.margin_free)},
+            {"margin_level", std::to_string(equity_record.margin_level)},
+        });
+    }
+
+    const JSONObject table_props = table_builder.CreateTableProps();
+    const Node table_node = Table({}, table_props);
 
     const Node report = div({
         h1({text("Equity Report") }),
+        table_node
     });
 
     utils::CreateUI(report, response, allocator);

@@ -95,4 +95,13 @@ namespace utils {
         response.SetObject();
         response.AddMember("ui", ui_object, allocator);
     }
+
+    std::string FormatTimestampToString(const time_t timestamp) {
+        std::tm tm{};
+        localtime_r(&timestamp, &tm);
+
+        std::ostringstream oss;
+        oss << std::put_time(&tm, "%Y.%m.%d %H:%M:%S");
+        return oss.str();
+    }
 }

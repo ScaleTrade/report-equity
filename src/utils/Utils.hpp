@@ -23,7 +23,4 @@ namespace utils {
     std::string GetGroupCurrencyByName(const std::vector<GroupRecord>& group_vector, const std::string& group_name);
 
     std::vector<EquityRecord> AggregateAverageEquityByLogin(const std::vector<EquityRecord>& records);
-
-    // Костыль для показа
-    std::vector<EquityRecord> GetFirst100Records(const std::vector<EquityRecord>& records);
 }

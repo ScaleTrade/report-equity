@@ -24,7 +24,7 @@ namespace utils {
             text_object.AddMember("type", "#text", allocator);
 
             Value props(kObjectType);
-            props.AddMember("value", "Pending Trades report", allocator);
+            props.AddMember("value", "Daily Equity report", allocator);
 
             text_object.AddMember("props", props, allocator);
             children.PushBack(text_object, allocator);
@@ -169,16 +169,5 @@ namespace utils {
         }
 
         return result;
-    }
-
-    // Костыль для показа
-    std::vector<EquityRecord> GetFirst100Records(const std::vector<EquityRecord>& records) {
-        const size_t limit = 100;
-
-        if (records.size() <= limit) {
-            return records;
-        }
-
-        return std::vector<EquityRecord>(records.begin(), records.begin() + limit);
     }
 }

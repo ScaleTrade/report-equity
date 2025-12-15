@@ -4,9 +4,10 @@
 #include <ctime>
 #include <iomanip>
 #include <sstream>
+#include "Structures.hpp"
+#include "structures/PluginStructures.hpp"
 #include "ast/Ast.hpp"
 #include <rapidjson/document.h>
-#include "Structures.hpp"
 
 namespace utils {
     void CreateUI(const ast::Node& node,
@@ -19,7 +20,7 @@ namespace utils {
 
     std::string GetGroupCurrencyByName(const std::vector<GroupRecord>& group_vector, const std::string& group_name);
 
-    std::vector<EquityRecord> AggregateAverageByLogin(const std::vector<EquityRecord>& records);
+    std::vector<EquityRecord> AggregateAverageEquityByLogin(const std::vector<EquityRecord>& records);
 
     // Костыль для показа
     std::vector<EquityRecord> GetFirst100Records(const std::vector<EquityRecord>& records);

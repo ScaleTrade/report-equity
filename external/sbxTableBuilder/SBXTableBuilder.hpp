@@ -11,15 +11,18 @@ struct TableColumn {
     std::string language_token;
     double order = 0.0;
     bool is_exported = true;
+    bool is_sorted = true;
 
     TableColumn(const std::string& key,
                 const std::string& language_token,
                 const double& order = 0.0,
-                const bool& is_exported = true)
+                const bool& is_exported = true,
+                const bool& is_sorted = true)
         : key(key),
           language_token(language_token),
           order(order),
-          is_exported(is_exported) {}
+          is_exported(is_exported),
+          is_sorted(is_sorted){}
 };
 
 class TableBuilder {
@@ -36,6 +39,11 @@ public:
         column_obj["name"] = column.language_token;
         column_obj["order"] = column.order;
         column_obj["export"] = column.is_exported;
+        column_obj["sort"] = column.is_sorted;
+
+        // TODO: расширить фильтр
+        column_obj["filter"] = JSONObject{{"type", "search"}};
+
         _structure[column.key] = std::move(column_obj);
     }
 
@@ -77,17 +85,21 @@ public:
         JSONObject data_obj;
         JSONArray json_rows;
         json_rows.reserve(_rows.size());
+
         for (const auto& row : _rows) {
             json_rows.push_back(row);
         }
+
         data_obj["rows"] = std::move(json_rows);
 
 
         JSONArray structure_keys;
         structure_keys.reserve(_column_order.size());
+
         for (const auto& key : _column_order) {
             structure_keys.push_back(key);
         }
+
         data_obj["structure"] = std::move(structure_keys);
         table_props["data"] = std::move(data_obj);
         table_props["structure"] = _structure;

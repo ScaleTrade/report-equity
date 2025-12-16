@@ -16,8 +16,3 @@ struct Total {
     double margin;
     double margin_free;
 };
-
-struct AverageEquity {
-    EquityRecord sum{};
-    size_t count = 0;
-};

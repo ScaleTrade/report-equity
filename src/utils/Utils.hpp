@@ -19,8 +19,4 @@ namespace utils {
     std::string FormatTimestampToString(const time_t& timestamp);
 
     double TruncateDouble(const double& value, const int& digits);
-
-    std::string GetGroupCurrencyByName(const std::vector<GroupRecord>& group_vector, const std::string& group_name);
-
-    std::vector<EquityRecord> AggregateAverageEquityByLogin(const std::vector<EquityRecord>& records);
 }

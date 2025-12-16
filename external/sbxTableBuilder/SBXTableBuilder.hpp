@@ -25,11 +25,10 @@ public:
         _column_tokens.push_back(column.language_token);
         _column_positions.push_back(column.order);
 
-        JSONObject col;
-        col["key"] = column.key;
-        col["name"] = column.language_token;
-        col["order"] = column.order;
-        _structure.push_back(std::move(col));
+        JSONObject col_obj;
+        col_obj["name"] = column.language_token;
+        col_obj["order"] = column.order;
+        _structure[column.key] = std::move(col_obj);
     }
 
     void AddRow(const std::vector<JSONValue>& row_values) {
@@ -96,7 +95,7 @@ private:
     std::vector<double> _column_positions;
 
     std::vector<JSONArray> _rows;
-    JSONArray _structure;
+    JSONObject _structure;
 
     std::string _id_column;
     std::pair<std::string, std::string> _order_by{"id", "DESC"};

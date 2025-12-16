@@ -63,6 +63,7 @@ public:
 
     void AddColumn(const TableColumn& column) {
         _columns[column.key] = column.ToJSON();
+        _column_order.push_back(column.key); // Для нового compact варианта
     }
 
     void AddRow(const std::map<std::string, JSONValue>& row_data) {
@@ -71,40 +72,30 @@ public:
             row[key] = value;
         }
         _data.emplace_back(row);
+
+        // Сохраняем для compact варианта
+        std::vector<JSONValue> compact_row;
+        for (const auto& key : _column_order) {
+            auto it = row_data.find(key);
+            if (it != row_data.end()) {
+                compact_row.push_back(it->second);
+            } else {
+                compact_row.push_back(nullptr);
+            }
+        }
+        _compact_rows.emplace_back(compact_row);
     }
 
-    void SetIdColumn(const std::string& id_column) {
-        _id_column = id_column;
-    }
+    void SetIdColumn(const std::string& id_column) { _id_column = id_column; }
+    void SetOrderBy(const std::string& column, const std::string& order = "DESC") { _order_by = {column, order}; }
+    void SetTotalData(const JSONArray& total_data) { _total_data = total_data; }
+    void SetTotalDataTitle(const std::string& total_data_title) { _total_data_title = total_data_title; }
+    void EnableExportButton(const bool& enabled = true) { _show_export_button = enabled; }
+    void EnableRefreshButton(const bool& enabled = true) { _show_refresh_button = enabled; }
+    void EnableBookmarksButton(const bool& enabled = true) { _show_bookmarks_button = enabled; }
+    void EnableTotal(const bool& enabled = true) { _show_total = enabled; }
 
-    void SetOrderBy(const std::string& column, const std::string& order = "DESC") {
-        _order_by = {column, order};
-    }
-
-    void SetTotalData(const JSONArray& total_data) {
-        _total_data = total_data;
-    }
-
-    void SetTotalDataTitle(const std::string& total_data_title) {
-        _total_data_title = total_data_title;
-    }
-
-    void EnableExportButton(const bool& enabled = true) {
-        _show_export_button = enabled;
-    }
-
-    void EnableRefreshButton(const bool& enabled = true) {
-        _show_refresh_button = enabled;
-    }
-
-    void EnableBookmarksButton(const bool& enabled = true) {
-        _show_export_button = enabled;
-    }
-
-    void EnableTotal(const bool& enabled = true) {
-        _show_total = enabled;
-    }
-
+    // v.1 Стандартный вариант
     [[nodiscard]] JSONObject CreateTableProps() const {
         JSONObject structure;
         for (const auto& [key, value] : _columns) {
@@ -131,17 +122,31 @@ public:
         return table_props;
     }
 
+    // v.2 Компактный вариант
+    [[nodiscard]] JSONObject CreateTablePropsCompact() const {
+        JSONObject table_props;
+        table_props["name"] = _table_name;
+        table_props["rows"] = _compact_rows;
+        table_props["structure"] = _column_order;
+        return table_props;
+    }
+
 private:
     std::string _table_name;
     std::string _id_column;
     std::map<std::string, JSONValue> _columns;
     JSONArray _data;
     JSONArray _total_data;
-    std::vector <std::string> _order_by = {"id", "DESC"};
+    std::vector<std::string> _order_by = {"id", "DESC"};
     bool _show_refresh_button = true;
     bool _show_bookmarks_button = true;
     bool _show_export_button = true;
     bool _show_total = false;
     std::string _total_data_title;
+
+    // Для компактного варианта
+    std::vector<std::string> _column_order;
+    std::vector<std::vector<JSONValue>> _compact_rows;
 };
+
 

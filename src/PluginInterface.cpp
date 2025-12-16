@@ -94,7 +94,7 @@ extern "C" void CreateReport(rapidjson::Value& request,
         });
     }
 
-    const JSONObject table_props = table_builder.CreateTableProps();
+    const JSONObject table_props = table_builder.CreateTablePropsCompact();
     const Node table_node = Table({}, table_props);
 
     const Node report = Column({

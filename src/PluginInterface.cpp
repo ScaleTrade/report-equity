@@ -48,6 +48,10 @@ extern "C" void CreateReport(rapidjson::Value& request,
 
     std::cout << "Equity vector SIZE: " << equity_vector.size() << std::endl;
 
+    std::vector<EquityRecord> aggregated_equity_vector = utils::AggregateAverageEquityByLogin(equity_vector);
+
+    std::cout << "Aggregate equity vector SIZE: " << aggregated_equity_vector.size() << std::endl;
+
     // v.1
     // TableBuilder table_builder("EquityReportTable");
     // table_builder.SetIdColumn("login");
@@ -113,7 +117,7 @@ extern "C" void CreateReport(rapidjson::Value& request,
     table_builder.AddColumn({"prevbalance", "PREV_BALANCE", 6});
     table_builder.AddColumn({"credit", "CREDIT", 7});
     table_builder.AddColumn({"equity", "EQUITY", 8});
-    table_builder.AddColumn({"profit", "PROFIT", 9});
+    table_builder.AddColumn({"profit", "AMOUNT", 9});
     table_builder.AddColumn({"storage", "SWAP", 10});
     table_builder.AddColumn({"commission", "COMMISSION", 11});
     table_builder.AddColumn({"margin", "MARGIN", 12});
@@ -121,7 +125,7 @@ extern "C" void CreateReport(rapidjson::Value& request,
     table_builder.AddColumn({"margin_level", "MARGIN_LEVEL", 14});
     table_builder.AddColumn({"currency", "CURRENCY", 15});
 
-    for (const auto& equity_record : equity_vector) {
+    for (const auto& equity_record : aggregated_equity_vector) {
         table_builder.AddRow({
             utils::TruncateDouble(equity_record.login, 0),
             utils::FormatTimestampToString(equity_record.create_time),
@@ -131,6 +135,7 @@ extern "C" void CreateReport(rapidjson::Value& request,
             utils::TruncateDouble(equity_record.prevbalance, 2),
             utils::TruncateDouble(equity_record.credit, 2),
             utils::TruncateDouble(equity_record.equity, 2),
+            utils::TruncateDouble(equity_record.profit, 2),
             utils::TruncateDouble(equity_record.storage, 2),
             utils::TruncateDouble(equity_record.commission, 2),
             utils::TruncateDouble(equity_record.margin, 2),

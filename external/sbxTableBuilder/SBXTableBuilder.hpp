@@ -32,8 +32,6 @@ public:
 
     void AddColumn(const TableColumn& column) {
         _column_order.push_back(column.key);
-        _column_tokens.push_back(column.language_token);
-        _column_positions.push_back(column.order);
 
         JSONObject column_obj;
         column_obj["name"] = column.language_token;
@@ -57,14 +55,21 @@ public:
     }
 
     void SetIdColumn(const std::string& id_column) { _id_column = id_column; }
+
     void SetOrderBy(const std::string& column, const std::string& order = "DESC") {
         _order_by = {column, order};
     }
-    void EnableRefreshButton(bool enabled) { _show_refresh_button = enabled; }
-    void EnableBookmarksButton(bool enabled) { _show_bookmarks_button = enabled; }
-    void EnableExportButton(bool enabled) { _show_export_button = enabled; }
-    void EnableTotal(bool enabled) { _show_total = enabled; }
+
+    void EnableRefreshButton(const bool& enabled) { _show_refresh_button = enabled; }
+
+    void EnableBookmarksButton(const bool& enabled) { _show_bookmarks_button = enabled; }
+
+    void EnableExportButton(const bool& enabled) { _show_export_button = enabled; }
+
+    void EnableTotal(const bool& enabled) { _show_total = enabled; }
+
     void SetTotalDataTitle(const std::string& title) { _total_data_title = title; }
+
     void SetTotalData(const JSONArray& total_data) { _total_data = total_data; }
 
     [[nodiscard]] JSONObject CreateTableProps() const {
@@ -111,8 +116,6 @@ private:
     std::string _table_name;
 
     std::vector<std::string> _column_order;
-    std::vector<std::string> _column_tokens;
-    std::vector<double> _column_positions;
 
     std::vector<JSONArray> _rows;
     JSONObject _structure;

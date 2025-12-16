@@ -38,15 +38,17 @@ extern "C" void CreateReport(rapidjson::Value& request,
     }
 
     std::vector<EquityRecord> equity_vector;
+    std::vector<AccountRecord> account_vector;
 
     try {
         server->GetAccountsEquitiesByGroup(from, to, group_mask, &equity_vector);
+        server->GetAccountsByGroup(group_mask, &account_vector);
     } catch (const std::exception& e) {
         std::cerr << "[EquityReportInterface]: " << e.what() << std::endl;
     }
 
     std::cout << "Equity vector SIZE: " << equity_vector.size() << std::endl;
-
+    std::cout << "Account vector SIZE: " << equity_vector.size() << std::endl;
 
     TableBuilder table_builder("EquityReportTable");
 

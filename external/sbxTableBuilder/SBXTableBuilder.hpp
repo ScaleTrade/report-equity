@@ -10,9 +10,16 @@ struct TableColumn {
     std::string key;
     std::string language_token;
     double order = 0.0;
+    bool is_exported = true;
 
-    TableColumn(const std::string& k, const std::string& token, double o = 0.0)
-        : key(k), language_token(token), order(o) {}
+    TableColumn(const std::string& key,
+                const std::string& language_token,
+                const double& order = 0.0,
+                const bool& is_exported = true)
+        : key(key),
+          language_token(language_token),
+          order(order),
+          is_exported(is_exported) {}
 };
 
 class TableBuilder {
@@ -25,10 +32,11 @@ public:
         _column_tokens.push_back(column.language_token);
         _column_positions.push_back(column.order);
 
-        JSONObject col_obj;
-        col_obj["name"] = column.language_token;
-        col_obj["order"] = column.order;
-        _structure[column.key] = std::move(col_obj);
+        JSONObject column_obj;
+        column_obj["name"] = column.language_token;
+        column_obj["order"] = column.order;
+        column_obj["export"] = column.is_exported;
+        _structure[column.key] = std::move(column_obj);
     }
 
     void AddRow(const std::vector<JSONValue>& row_values) {

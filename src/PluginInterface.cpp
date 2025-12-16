@@ -113,7 +113,7 @@ extern "C" void CreateReport(rapidjson::Value& request,
             utils::TruncateDouble(equity_record.margin, 2),
             utils::TruncateDouble(equity_record.margin_free, 2),
             utils::TruncateDouble(equity_record.margin_level, 2),
-            equity_record.currency
+            "USD"
         });
     }
 
@@ -129,6 +129,7 @@ extern "C" void CreateReport(rapidjson::Value& request,
         {"storage", utils::TruncateDouble(totals_map["USD"].storage, 2)},
         {"margin", utils::TruncateDouble(totals_map["USD"].margin, 2)},
         {"margin_free", utils::TruncateDouble(totals_map["USD"].margin_free, 2)},
+        {"currency", totals_map["USD"].currency},
     });
 
     table_builder.SetTotalData(totals_array);

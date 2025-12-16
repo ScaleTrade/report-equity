@@ -2,7 +2,6 @@
 
 #include <string>
 #include <vector>
-#include <map>
 #include "ast/Ast.hpp"
 
 using namespace ast;
@@ -25,22 +24,21 @@ public:
         _column_order.push_back(column.key);
         _column_tokens.push_back(column.language_token);
         _column_positions.push_back(column.order);
+
+        JSONObject col;
+        col["key"] = column.key;
+        col["name"] = column.language_token;
+        col["order"] = column.order;
+        _structure.push_back(std::move(col));
     }
 
-    void AddRow(const std::map<std::string, JSONValue>& row_data) {
-        std::vector<JSONValue> row;
-        row.reserve(_column_order.size());
-
-        for (const auto& key : _column_order) {
-            auto it = row_data.find(key);
-            if (it != row_data.end()) {
-                row.push_back(it->second);
-            } else {
-                row.push_back(nullptr);
-            }
+    void AddRow(const std::vector<JSONValue>& row_values) {
+        JSONArray json_row;
+        json_row.reserve(row_values.size());
+        for (const auto& val : row_values) {
+            json_row.push_back(val);
         }
-
-        _rows.emplace_back(std::move(row));
+        _rows.push_back(std::move(json_row));
     }
 
     void SetIdColumn(const std::string& id_column) { _id_column = id_column; }
@@ -52,10 +50,8 @@ public:
     void EnableExportButton(bool enabled) { _show_export_button = enabled; }
     void EnableTotal(bool enabled) { _show_total = enabled; }
     void SetTotalDataTitle(const std::string& title) { _total_data_title = title; }
-
     void SetTotalData(const JSONArray& total_data) { _total_data = total_data; }
 
-    // --- Создание компактного JSON с data.rows и data.structure ---
     [[nodiscard]] JSONObject CreateTableProps() const {
         JSONObject table_props;
         table_props["name"] = _table_name;
@@ -73,27 +69,17 @@ public:
 
         JSONObject data_obj;
 
+        // --- rows ---
         JSONArray json_rows;
         json_rows.reserve(_rows.size());
         for (const auto& row : _rows) {
-            JSONArray json_row;
-            json_row.reserve(row.size());
-            for (const auto& val : row) {
-                json_row.push_back(val);
-            }
-            json_rows.push_back(std::move(json_row));
+            json_rows.push_back(row);
         }
         data_obj["rows"] = std::move(json_rows);
 
-        JSONArray structure;
-        structure.reserve(_column_order.size());
-        for (const auto& key : _column_order) {
-            structure.push_back(key);
-        }
-        data_obj["structure"] = std::move(structure);
+        data_obj["structure"] = _structure;
 
         table_props["data"] = std::move(data_obj);
-
         return table_props;
     }
 
@@ -103,7 +89,9 @@ private:
     std::vector<std::string> _column_order;
     std::vector<std::string> _column_tokens;
     std::vector<double> _column_positions;
-    std::vector<std::vector<JSONValue>> _rows;
+
+    std::vector<JSONArray> _rows;
+    JSONArray _structure;
 
     std::string _id_column;
     std::pair<std::string, std::string> _order_by{"id", "DESC"};

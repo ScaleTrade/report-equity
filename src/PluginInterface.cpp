@@ -99,7 +99,6 @@ extern "C" void CreateReport(rapidjson::Value& request,
     // v.2
     TableBuilder table_builder("EquityReportTable");
 
-    // Настройки
     table_builder.SetIdColumn("login");
     table_builder.SetOrderBy("login", "DESC");
     table_builder.EnableRefreshButton(false);
@@ -108,19 +107,38 @@ extern "C" void CreateReport(rapidjson::Value& request,
     table_builder.EnableTotal(true);
     table_builder.SetTotalDataTitle("TOTAL");
 
-    // Колонки с order
     table_builder.AddColumn({"login", "LOGIN", 1});
     table_builder.AddColumn({"create_time", "CREATE_TIME", 2});
+    table_builder.AddColumn({"group", "GROUP", 3});
+    table_builder.AddColumn({"leverage", "LEVERAGE", 4});
     table_builder.AddColumn({"balance", "BALANCE", 5});
+    table_builder.AddColumn({"prevbalance", "PREV_BALANCE", 6});
+    table_builder.AddColumn({"credit", "CREDIT", 7});
     table_builder.AddColumn({"equity", "EQUITY", 8});
+    table_builder.AddColumn({"profit", "PROFIT", 9});
+    table_builder.AddColumn({"storage", "SWAP", 10});
+    table_builder.AddColumn({"commission", "COMMISSION", 11});
+    table_builder.AddColumn({"margin", "MARGIN", 12});
+    table_builder.AddColumn({"margin_free", "MARGIN_FREE", 13});
+    table_builder.AddColumn({"margin_level", "MARGIN_LEVEL", 14});
+    table_builder.AddColumn({"currency", "CURRENCY", 15});
 
-    // Добавление строк
-    for (const auto& rec : equity_vector) {
+    for (const auto& equity_record : equity_vector) {
         table_builder.AddRow({
-            {"login", utils::TruncateDouble(rec.login, 0)},
-            {"create_time", utils::FormatTimestampToString(rec.create_time)},
-            {"balance", utils::TruncateDouble(rec.balance, 2)},
-            {"equity", utils::TruncateDouble(rec.equity, 2)}
+            utils::TruncateDouble(equity_record.login, 0),
+            utils::FormatTimestampToString(equity_record.create_time),
+            equity_record.group,
+            utils::TruncateDouble(equity_record.leverage, 0),
+            utils::TruncateDouble(equity_record.balance, 2),
+            utils::TruncateDouble(equity_record.prevbalance, 2),
+            utils::TruncateDouble(equity_record.credit, 2),
+            utils::TruncateDouble(equity_record.equity, 2),
+            utils::TruncateDouble(equity_record.storage, 2),
+            utils::TruncateDouble(equity_record.commission, 2),
+            utils::TruncateDouble(equity_record.margin, 2),
+            utils::TruncateDouble(equity_record.margin_free, 2),
+            utils::TruncateDouble(equity_record.margin_level, 2),
+            equity_record.currency
         });
     }
 

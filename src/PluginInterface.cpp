@@ -77,7 +77,7 @@ extern "C" void CreateReport(rapidjson::Value&                   request,
     // Columns
     table_builder.AddColumn({"login", "LOGIN", 1, search_filter});
     table_builder.AddColumn({"create_time", "CREATE_TIME", 2, date_time_filter});
-    table_builder.AddColumn({"group", "GROUP", 3});
+    table_builder.AddColumn({"group", "GROUP", 3, group_select_filter});
     table_builder.AddColumn({"balance", "BALANCE", 5, search_filter});
     table_builder.AddColumn({"prevbalance", "PREV_BALANCE", 6, search_filter});
     table_builder.AddColumn({"floating_pl", "FLOATING_PL", 7, search_filter});

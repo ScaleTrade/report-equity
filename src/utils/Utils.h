@@ -6,17 +6,19 @@
 #include <sstream>
 #include <unordered_map>
 #include <unordered_set>
+
 #include "Structures.h"
-#include "structures/PluginStructures.h"
 #include "ast/Ast.hpp"
+#include "structures/PluginStructures.h"
 #include <rapidjson/document.h>
 
 namespace utils {
-    void CreateUI(const ast::Node& node,
-              rapidjson::Value& response,
-              rapidjson::Document::AllocatorType& allocator);
+    void CreateUI(const ast::Node&                    node,
+                  rapidjson::Value&                   response,
+                  rapidjson::Document::AllocatorType& allocator);
 
-    std::string FormatTimestampToString(const time_t& timestamp);
+    std::string FormatTimestampToString(const time_t&      timestamp,
+                                        const std::string& format = "%Y.%m.%d %H:%M:%S");
 
     double TruncateDouble(const double& value, const int& digits);
-}
+} // namespace utils

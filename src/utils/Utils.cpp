@@ -1,8 +1,8 @@
 #include "Utils.h"
 
 namespace utils {
-    void CreateUI(const ast::Node& node,
-                  rapidjson::Value& response,
+    void CreateUI(const ast::Node&                    node,
+                  rapidjson::Value&                   response,
                   rapidjson::Document::AllocatorType& allocator) {
         // Content
         Value node_object(kObjectType);
@@ -86,7 +86,6 @@ namespace utils {
         model_object.AddMember("footerContent", footer_array, allocator);
         model_object.AddMember("content", content_array, allocator);
 
-
         // UI
         Value ui_object(kObjectType);
         ui_object.AddMember("modal", model_object, allocator);
@@ -95,12 +94,12 @@ namespace utils {
         response.AddMember("ui", ui_object, allocator);
     }
 
-    std::string FormatTimestampToString(const time_t& timestamp) {
+    std::string FormatTimestampToString(const time_t& timestamp, const std::string& format) {
         std::tm tm{};
         localtime_r(&timestamp, &tm);
 
         std::ostringstream oss;
-        oss << std::put_time(&tm, "%Y.%m.%d %H:%M:%S");
+        oss << std::put_time(&tm, format.c_str());
         return oss.str();
     }
 
@@ -108,4 +107,4 @@ namespace utils {
         const double factor = std::pow(10.0, digits);
         return std::trunc(value * factor) / factor;
     }
-}
+} // namespace utils
